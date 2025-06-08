@@ -4,8 +4,8 @@ const tableBody = document.querySelector('#user-entries tbody');
 // Set age range for DOB input
 const dobInput = document.getElementById('dob');
 const today = new Date();
-const minAge = new Date(today.getFullYear() - 55, today.getMonth(), today.getDate());
-const maxAge = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+const minAge = new Date(today.getFullYear() - 54, today.getMonth(), today.getDate());
+const maxAge = new Date(today.getFullYear() - 19, today.getMonth(), today.getDate());
 dobInput.min = minAge.toISOString().split('T')[0];
 dobInput.max = maxAge.toISOString().split('T')[0];
 
