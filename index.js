@@ -35,33 +35,30 @@ function isValid(name, email) {
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   return nameValid && emailValid;
 }
-// Validate age (18 to 55 years inclusive)
+
+// Validate age (18 to 55 years inclusive) - FIXED
 function isValidAge(dob) {
   if (!dob) return false;
-
+  
   const dobDate = new Date(dob);
-  if (isNaN(dobDate)) return false; // Invalid date check
-
+  if (isNaN(dobDate)) return false;
+  
   const today = new Date();
-  // Normalize dates to midnight to avoid time-of-day issues
-  dobDate.setHours(0, 0, 0, 0);
-  today.setHours(0, 0, 0, 0);
-
-  const age = today.getFullYear() - dobDate.getFullYear();
+  let age = today.getFullYear() - dobDate.getFullYear();
+  
+  // Check if birthday has occurred this year
   const monthDiff = today.getMonth() - dobDate.getMonth();
-  const dayDiff = today.getDate() - dobDate.getDate();
-
-  // Adjust age if birthday hasn't occurred this year
-  const adjustedAge =
-    monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
-
-  return adjustedAge >= 18 && adjustedAge <= 55;
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
+    age--;
+  }
+  
+  return age >= 18 && age <= 55;
 }
 
 // Handle form submission
 form.addEventListener('submit', function (e) {
   e.preventDefault();
-
+  
   const name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value.trim();
@@ -72,6 +69,7 @@ form.addEventListener('submit', function (e) {
     alert('Please enter a valid name and email.');
     return;
   }
+
   if (!isValidAge(dob)) {
     alert('Please enter a valid date of birth (age must be between 18 and 55).');
     return;
@@ -86,7 +84,6 @@ form.addEventListener('submit', function (e) {
   const entries = getEntries();
   entries.push(entry);
   localStorage.setItem('user-entries', JSON.stringify(entries));
-
   displayEntries();
   form.reset();
 });
