@@ -4,8 +4,8 @@ const tableBody = document.querySelector('#user-entries tbody');
 // Set age range for DOB input
 const dobInput = document.getElementById('dob');
 const today = new Date();
-const minAge = new Date(today.getFullYear() - 54, today.getMonth(), today.getDate());
-const maxAge = new Date(today.getFullYear() - 19, today.getMonth(), today.getDate());
+const minAge = new Date(today.getFullYear() - 55, today.getMonth(), today.getDate());
+const maxAge = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
 dobInput.min = minAge.toISOString().split('T')[0];
 dobInput.max = maxAge.toISOString().split('T')[0];
 
@@ -35,6 +35,20 @@ function isValid(name, email) {
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   return nameValid && emailValid;
 }
+// Validate age (18 to 55 years inclusive)
+function isValidAge(dob) {
+  const dobDate = new Date(dob);
+  const today = new Date();
+  const age = today.getFullYear() - dobDate.getFullYear();
+  const monthDiff = today.getMonth() - dobDate.getMonth();
+  const dayDiff = today.getDate() - dobDate.getDate();
+
+  // Adjust age if birthday hasn't occurred this year
+  const adjustedAge =
+    monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
+
+  return adjustedAge >= 18 && adjustedAge <= 55;
+}
 
 // Handle form submission
 form.addEventListener('submit', function (e) {
@@ -48,6 +62,10 @@ form.addEventListener('submit', function (e) {
 
   if (!isValid(name, email)) {
     alert('Please enter a valid name and email.');
+    return;
+  }
+  if (!dob || !isValidAge(dob)) {
+    alert('Please enter a valid date of birth (age must be between 18 and 55).');
     return;
   }
 
