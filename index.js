@@ -37,8 +37,16 @@ function isValid(name, email) {
 }
 // Validate age (18 to 55 years inclusive)
 function isValidAge(dob) {
+  if (!dob) return false;
+
   const dobDate = new Date(dob);
+  if (isNaN(dobDate)) return false; // Invalid date check
+
   const today = new Date();
+  // Normalize dates to midnight to avoid time-of-day issues
+  dobDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
   const age = today.getFullYear() - dobDate.getFullYear();
   const monthDiff = today.getMonth() - dobDate.getMonth();
   const dayDiff = today.getDate() - dobDate.getDate();
@@ -64,7 +72,7 @@ form.addEventListener('submit', function (e) {
     alert('Please enter a valid name and email.');
     return;
   }
-  if (!dob || !isValidAge(dob)) {
+  if (!isValidAge(dob)) {
     alert('Please enter a valid date of birth (age must be between 18 and 55).');
     return;
   }
